@@ -17,12 +17,12 @@ import javax.persistence.Table;
 public class Cidade {
 
     @Id
-    @Column(name = "id_cidade")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "nome", length = 50)
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "qtd_habitantes")
+    @Column(name = "habitantes")
     private Long habitantes;
 }
