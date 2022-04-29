@@ -2,11 +2,14 @@ package io.github.maliquem.localizacao.service;
 
 import io.github.maliquem.localizacao.domain.entity.Cidade;
 import io.github.maliquem.localizacao.domain.repository.CidadeRepository;
+import static io.github.maliquem.localizacao.domain.repository.specs.CidadeSpecs.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +60,35 @@ public class CidadeService {
 
     public void pesquisarCidadePorHabitantesMaiorIgualEComNome(Long habitantes, String nome){
         cidadeRepository.findByHabitantesGreaterThanEqualAndNameLike(habitantes, nome).forEach(System.out::println);
+    }
+
+    public List<Cidade> filtroDinamico(Cidade cidade){
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+        Example<Cidade> example = Example.of(cidade, matcher);
+        return cidadeRepository.findAll(example);
+    }
+
+    public void listarCidadesByNameSpec(){
+        cidadeRepository.findAll(nameEqual("Fortaleza").and(habitantesGreaterThan(1000000L))).forEach(System.out::println);
+    }
+
+    public void listarCidadesSpecsFiltroDinamico(Cidade filtro){
+        Specification<Cidade> specs = Specification.where((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
+
+        if (filtro.getId() != null){
+            specs = specs.and(idEqual(filtro.getId()));
+        }
+
+        if (StringUtils.hasText(filtro.getName())){
+            specs = specs.and(nameEqual(filtro.getName()));
+        }
+
+        if (filtro.getHabitantes() != null){
+            specs = specs.and(habitantesGreaterThan(filtro.getHabitantes()));
+        }
+
+        cidadeRepository.findAll(specs).forEach(System.out::println);
     }
 }

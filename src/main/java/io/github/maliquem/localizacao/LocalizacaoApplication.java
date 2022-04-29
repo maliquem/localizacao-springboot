@@ -31,9 +31,7 @@ public class LocalizacaoApplication implements CommandLineRunner {
 		 * 		salvarCidade(11L, "Brasilia", 3094325L);
 		 */
 
-		cidadeService.pesquisarCidadePorNomeLikePaginado("%%%%", 1, 2);
-
-
+		cidadeService.listarCidadesByNameSpec();
 	}
 
 	public static void main(String[] args) {
