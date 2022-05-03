@@ -33,6 +33,13 @@ public class CidadeService {
         cidadeRepository.findByNameLike(nome, Sort.by(parametros)).forEach(System.out::println);
     }
 
+    public void pesquisarNomePorSqlNativo(String name){
+        cidadeRepository.findByNameSqlNativo(name)
+                .stream()
+                .map(cidadeProjection -> new Cidade(cidadeProjection.getId(), cidadeProjection.getName(), null))
+                .forEach(System.out::println);
+    }
+
     public void pesquisarCidadePorNomeLikePaginado(String nome, Integer page, Integer size){
         Pageable pageable = PageRequest.of(page, size);
         cidadeRepository.findByNameLike(nome, pageable).forEach(System.out::println);

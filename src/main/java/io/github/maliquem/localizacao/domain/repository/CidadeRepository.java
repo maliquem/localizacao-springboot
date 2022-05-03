@@ -1,17 +1,22 @@
 package io.github.maliquem.localizacao.domain.repository;
 
 import io.github.maliquem.localizacao.domain.entity.Cidade;
+import io.github.maliquem.localizacao.domain.repository.projections.CidadeProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface CidadeRepository extends JpaRepository<Cidade, Long>, JpaSpecificationExecutor<Cidade> {
 
+    // PESQUISA PELO NOME COMPLETO USANDO SQL NATIVO
+    @Query(nativeQuery = true, value = "SELECT c.id, c.name FROM tb_cidade AS c WHERE c.name =:name ")
+    List<CidadeProjection> findByNameSqlNativo(@Param("name") String name);
     // PESQUISA PELO NOME COMPLETO
     List<Cidade> findByName(String name);
     // PESQUISA PELO NOME LIKE E ORGANIZA POR PARAMETRO

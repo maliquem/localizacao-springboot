@@ -31,7 +31,7 @@ public class LocalizacaoApplication implements CommandLineRunner {
 		 * 		salvarCidade(11L, "Brasilia", 3094325L);
 		 */
 
-		cidadeService.listarCidadesByNameSpec();
+		cidadeService.pesquisarNomePorSqlNativo("Fortaleza");
 	}
 
 	public static void main(String[] args) {
